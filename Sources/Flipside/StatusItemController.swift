@@ -83,10 +83,13 @@ final class StatusItemController: NSObject, NSPopoverDelegate {
     }
 
     @objc private func statusItemClicked() {
-        let event = NSApp.currentEvent
-        let isAlternate = event?.type == .rightMouseDown
-            || event?.modifierFlags.contains(.control) == true
-            || event?.modifierFlags.contains(.option) == true
+        // Control-click and Option-click count as a right-click. macOS already delivers a
+        // Control-click as one, but Option never arrives on the click a status item
+        // receives, so the modifier keys are read from the keyboard instead.
+        let modifiers = NSEvent.modifierFlags
+        let isAlternate = NSApp.currentEvent?.type == .rightMouseDown
+            || modifiers.contains(.control)
+            || modifiers.contains(.option)
         if isAlternate {
             flip()
         } else {

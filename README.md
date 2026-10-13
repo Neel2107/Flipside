@@ -9,7 +9,7 @@ A menu bar app that flips a Mac between two display arrangements: laptop beside 
 | To | Do this |
 | --- | --- |
 | Pick an arrangement | Click the menu bar icon, then a card (or press `1` / `2`) |
-| Flip to the other one | Right-click the icon, or press `⌃⌥⌘D` anywhere |
+| Flip to the other one | Right-click, Control-click or Option-click the icon, or press `⌃⌥⌘D` anywhere |
 | Change the shortcut | Click the keycaps in the panel and press a new combination (`Esc` cancels, `Delete` removes it) |
 | Start with your Mac | Turn on **Launch at login** in the panel |
 
