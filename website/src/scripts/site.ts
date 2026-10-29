@@ -158,10 +158,12 @@ class Hud {
     if (host) {
       const width = el.offsetWidth;
       const height = el.offsetHeight;
-      const scale = Math.min(1, (host.clientWidth * 0.94) / width, (host.clientHeight * 0.94) / height);
-      // Lower middle, like the app, but always wholly on its screen.
+      // Never larger than the app draws it, and with room around it on small screens.
+      const scale = Math.min(1, (host.clientWidth * 0.8) / width, (host.clientHeight * 0.8) / height);
+      // Lower middle, like the app, when the screen has room for that; centred when it doesn't.
+      const h = host.clientHeight;
       const half = (height * scale) / 2;
-      const y = Math.min(Math.max(host.clientHeight * 0.78, half + 8), host.clientHeight - half - 8);
+      const y = h >= height * scale * 2.4 ? Math.min(h * 0.78, h - half - 10) : h / 2;
       el.style.setProperty("--hud-scale", `${scale}`);
       el.style.setProperty("--hud-y", `${y}px`);
     }

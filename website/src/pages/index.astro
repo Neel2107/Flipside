@@ -135,7 +135,7 @@ const chord = [
               ))
             }
           </div>
-          <p class="rig-hint"><span class="hint-pointer">Click the keys, or press ⌃⌥⌘D</span><span class="hint-touch">Tap the keys</span></p>
+          <p class="rig-hint"><span class="hint-pointer">Click the keys, or press <span class="glyphs">⌃⌥⌘D</span></span><span class="hint-touch">Tap the keys</span></p>
         </div>
       </section>
 
@@ -156,7 +156,7 @@ const chord = [
                   <path d="M1 1v15.5l4-3.8 2.6 6 2.6-1.1-2.6-5.9H13z"></path>
                 </svg>
               </Diagram>
-              <Hud id="demo-flip-hud" />
+              <Hud id="demo-flip-hud" compact />
             </div>
             <div class="demo-text">
               <h3>Everything stays on the screen you're using</h3>
@@ -201,7 +201,7 @@ const chord = [
               <ul class="legend">
                 <li>
                   <span class="swatch" aria-hidden="true"></span>
-                  <span>Flipside: <b data-share>{percentAlong}%</b> along</span>
+                  <span>Flipside: <b data-share>{percentAlong}%</b> of the edge</span>
                 </li>
                 <li>
                   <span class="swatch swatch--ghost" aria-hidden="true"></span>
