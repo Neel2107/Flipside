@@ -2,6 +2,10 @@
 
 Each release publishes its section here as the GitHub release notes.
 
+## 0.1.3 — 2026-10-29
+
+- A new app icon: an aluminium keycap whose legend is the arrangement, the monitor with the MacBook in orange beside it.
+
 ## 0.1.2 — 2026-10-29
 
 - The confirmation that appears on each flip has clean rounded corners. Before, square corners showed around it over light windows.
