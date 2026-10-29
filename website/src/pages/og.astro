@@ -1,0 +1,106 @@
+---
+// The 1200 × 630 share card. Not linked from the site: render it to public/og.png with
+// `bun run og` (see the website README) after changing it.
+import Diagram from "../components/Diagram.astro";
+import Logo from "../components/Logo.astro";
+import { HERO_BOX, HERO_INSET, layouts } from "../scripts/config";
+import "../styles/global.css";
+
+const chord = ["⌃", "⌥", "⌘", "D"];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex" />
+    <title>Flipside share card</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Martian+Mono:wght@400..600&display=swap"
+    />
+    <style>
+      /* Always the light, aluminium look: a share card can't follow the viewer's theme. */
+      :root {
+        color-scheme: light;
+      }
+      html,
+      body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background: #e4e2dd;
+      }
+      /* Light tokens set on the card itself, so the render never depends on the machine's theme. */
+      .card {
+        --ink: #141414;
+        --ink-2: #4a4843;
+        --muted: #77746d;
+        --face: linear-gradient(180deg, #ffffff, #e9e7e1);
+        --face-rim: rgba(255, 255, 255, 0.7);
+        --sides: linear-gradient(180deg, #cbc7be, #aca79d);
+        --legend-monitor: #232323;
+        --key-top: #fdfcf9;
+        --key-bottom: #ebe9e3;
+        --key-side: #bab6ad;
+        --key-legend: #2a2a2a;
+        --key-highlight: #ffffff;
+        color: var(--ink);
+        background:
+          radial-gradient(90% 60% at 15% 0%, #efede8, transparent 70%),
+          #e4e2dd;
+        display: grid;
+        grid-template-columns: 1fr 440px;
+        gap: 48px;
+        align-items: center;
+        height: 100%;
+        padding: 64px 72px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font: 800 20px/1 var(--display);
+        font-stretch: 122%;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+      }
+      .card h1 {
+        margin-top: 44px;
+        font-size: 60px;
+      }
+      .url {
+        margin-top: 40px;
+        color: var(--muted);
+        font: 500 17px/1 var(--mono);
+        letter-spacing: 0.04em;
+      }
+      .card .chord {
+        margin-top: 26px;
+      }
+      .card .chord .key {
+        width: 84px;
+        font-size: 34px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div>
+        <div class="brand"><Logo size={40} id="og-logo" />Flipside</div>
+        <h1>Your MacBook moved. <span>Your displays didn't.</span></h1>
+        <p class="url">flipside.itsneel.com</p>
+      </div>
+      <div>
+        <div class="device">
+          <div class="screen">
+            <Diagram class="diagram--legend" arrangement={layouts[0]} box={HERO_BOX} scaleWith={layouts} inset={HERO_INSET} />
+          </div>
+        </div>
+        <div class="chord" aria-hidden="true">
+          {chord.map((cap) => <span class:list={["key", { "key--accent": cap === "D" }]}>{cap}</span>)}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

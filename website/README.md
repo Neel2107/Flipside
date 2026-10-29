@@ -23,6 +23,16 @@ bun --bun run build
 - The `/install` route serves the repository's current `scripts/install.sh`, and the version in
   the install section is read from `Resources/Info.plist`, so neither can drift from the app.
 
+## Share card
+
+`og.png` is the 1200 × 630 image every link preview uses. It's a screenshot of the `/og` page;
+after changing that page, re-render it with the dev server running:
+
+```sh
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --hide-scrollbars \
+  --window-size=1200,630 --virtual-time-budget=6000 --screenshot=public/og.png http://localhost:4322/og
+```
+
 ## Deployment
 
 The Vercel project `flipside` is connected to the GitHub repository, so every push to `main`
