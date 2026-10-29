@@ -37,12 +37,17 @@ final class HUDController {
         effect.layer?.cornerRadius = 22
         effect.layer?.cornerCurve = .continuous
         effect.layer?.masksToBounds = true
+        // The layer's corner radius clips the content but not the blur, which the window server
+        // draws behind the window as a plain rectangle. Only a mask image rounds that too.
+        effect.maskImage = Self.mask(size: size, cornerRadius: 22)
         host.frame = effect.bounds
         host.autoresizingMask = [.width, .height]
         effect.addSubview(host)
         panel.contentView = effect
 
         panel.setFrame(frame(for: size, on: display), display: true)
+        // The shadow follows the window's opaque pixels, so it has to be redone for the new mask.
+        panel.invalidateShadow()
         if !panel.isVisible { panel.alphaValue = 0 }
         panel.orderFrontRegardless()
         NSAnimationContext.runAnimationGroup { context in
@@ -84,6 +89,18 @@ final class HUDController {
         panel.isReleasedWhenClosed = false
         panel.collectionBehavior = [.canJoinAllSpaces, .transient, .ignoresCycle, .fullScreenAuxiliary]
         return panel
+    }
+
+    /// Opaque inside a continuous-cornered rounded rectangle, to match the layer's own corners.
+    private static func mask(size: CGSize, cornerRadius: CGFloat) -> NSImage {
+        NSImage(size: size, flipped: false) { rect in
+            let shape = RoundedRectangle(cornerRadius: cornerRadius, style: .continuous).path(in: rect)
+            guard let context = NSGraphicsContext.current?.cgContext else { return false }
+            context.addPath(shape.cgPath)
+            context.setFillColor(.black)
+            context.fillPath()
+            return true
+        }
     }
 
     /// Lower middle of `display`. Worked out from CoreGraphics rather than NSScreen, which can
