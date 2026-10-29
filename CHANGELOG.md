@@ -2,6 +2,10 @@
 
 Each release publishes its section here as the GitHub release notes.
 
+## 0.1.2 — 2026-10-29
+
+- The confirmation that appears on each flip has clean rounded corners. Before, square corners showed around it over light windows.
+
 ## 0.1.1 — 2026-10-14
 
 - Option-click on the menu bar icon flips, like a right-click or Control-click. Before, it opened the panel.
