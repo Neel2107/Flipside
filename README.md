@@ -1,14 +1,43 @@
-<img src="docs/icon.png" alt="" width="128" height="128" align="right" />
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/hero-dark.png" />
+  <img src="docs/hero-light.png" alt="Flipside: your MacBook moved, your displays didn't. A keycap showing the MacBook beside the monitor, above the four keys of the ⌃⌥⌘D shortcut." />
+</picture>
 
 # Flipside
 
-A menu bar app that flips a Mac between two display arrangements: laptop beside the monitor, or laptop underneath it.
+**Your MacBook moved. Your displays didn't.** Flipside keeps two display arrangements, MacBook beside the monitor or under it, and switches between them with one shortcut. It lives in your menu bar.
 
-**[flipside.itsneel.com](https://flipside.itsneel.com)** — try the flip in your browser, then install.
+**[Try it at flipside.itsneel.com](https://flipside.itsneel.com)** · [Latest release](https://github.com/Neel2107/Flipside/releases/latest)
 
-![The Flipside panel](docs/panel.png)
+## Install
+
+```sh
+curl -fsSL https://flipside.itsneel.com/install | sh
+```
+
+Requires an Apple silicon Mac on macOS 14 or later. The installer verifies the release checksum and puts Flipside in `/Applications`. Run the same command again to update. It serves this repository's `scripts/install.sh`, which you can also run straight from GitHub:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/Neel2107/Flipside/main/scripts/install.sh | sh
+```
+
+The app is ad-hoc signed and not notarised; the installer clears the quarantine flag so it opens normally. No permissions are needed: display arrangement and the global shortcut both use APIs that work without Accessibility or Screen Recording access.
+
+## Why
+
+macOS remembers one arrangement for a pair of displays. Slide your MacBook from beside the monitor to under it, and your pointer still leaves through the wrong edge until you open System Settings and drag a rectangle. Flipside keeps both arrangements, one shortcut apart.
+
+## What happens when you flip
+
+- **A confirmation where you're looking.** Rearranging displays moves nothing you can see, so each flip shows a brief confirmation on the screen your pointer is on, not always the main one.
+- **Your pointer stays on its screen.** macOS keeps the pointer's coordinates when screens move, which can leave it on the wrong display or on none. Flipside puts it back on the same spot of the same screen.
+- **The same shape at any resolution.** Positions are stored as a share of the shared edge, not in points, so "centred" stays centred if you change either display's resolution.
+- **An icon that shows the arrangement.** The menu bar icon draws the layout you're in and reshapes itself when it changes. It dims while only one display is connected.
+- **Nothing else moves.** The display with the menu bar stays the main display in both arrangements, so the menu bar and Dock never jump screens.
 
 ## Using it
+
+<img src="docs/panel.png" alt="The Flipside panel: two arrangement cards, the flip shortcut, and Launch at login" width="316" align="right" />
 
 | To | Do this |
 | --- | --- |
@@ -17,11 +46,9 @@ A menu bar app that flips a Mac between two display arrangements: laptop beside 
 | Change the shortcut | Click the keycaps in the panel and press a new combination (`Esc` cancels, `Delete` removes it) |
 | Start with your Mac | Turn on **Launch at login** in the panel |
 
-The icon draws the arrangement you're in, and dims when only one display is connected. Every change shows a brief confirmation on the screen your pointer is on, since rearranging displays moves nothing you can see. The pointer stays on the same spot of the same screen.
+<br clear="right" />
 
-The display with the menu bar stays the main display in both arrangements.
-
-## The two layouts
+### The two layouts
 
 Out of the box:
 
@@ -32,21 +59,11 @@ These were measured from screenshots, so they are within a few points of the ori
 
 To use a different arrangement for either slot, set it up once in System Settings → Displays → Arrange, then open the panel and choose **Save as**, or right-click a card and choose **Use Current Arrangement**. **Reset to Default** on the same menu undoes that.
 
-Positions are stored as a proportion along the shared edge, not in points, so "centred" stays centred if you change either display's resolution.
+### Scope
 
-## Install
+Flipside arranges exactly two displays. With one display, mirrored displays, or three or more, the panel says so and the layouts are disabled.
 
-```sh
-curl -fsSL https://flipside.itsneel.com/install | sh
-```
-
-That serves this repository's `scripts/install.sh`; `curl -fsSL https://raw.githubusercontent.com/Neel2107/Flipside/main/scripts/install.sh | sh` runs the same script straight from GitHub.
-
-Requires an Apple silicon Mac on macOS 14 or later. The installer verifies the release checksum and puts Flipside in `/Applications`. Run the same command again to update.
-
-The app is ad-hoc signed and not notarised; the installer clears the quarantine flag so it opens normally. No permissions are needed: display arrangement and the global shortcut both use APIs that work without Accessibility or Screen Recording access.
-
-### From source
+## From source
 
 Needs the Xcode Command Line Tools (`xcode-select --install`); Xcode itself is not required.
 
@@ -55,10 +72,6 @@ make install
 ```
 
 That builds `build/Flipside.app`, copies it to `/Applications` and launches it. `make app` only builds; `make run` builds and launches from the build folder.
-
-## Scope
-
-Flipside arranges exactly two displays. With one display, mirrored displays, or three or more, the panel says so and the layouts are disabled.
 
 ## Development
 
@@ -73,6 +86,8 @@ make previews  # renders the panel, HUD and icon in every state to build/preview
 ```sh
 swift run flipside-e2e --stand-in 60
 ```
+
+The app icon is drawn by `swift scripts/make-icon.swift Resources/AppIcon.icns`.
 
 Layout:
 
