@@ -587,6 +587,20 @@ h2 {
     0 24px 48px -30px rgba(0, 0, 0, 0.35);
 }
 
+/* The merged flip demo spans the row, screen beside its text, so its screens (and the
+   confirmation on them) are large enough to read. */
+.demo--wide {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  align-items: center;
+  padding-bottom: 12px;
+}
+
+.demo--wide .demo-text {
+  padding: 14px 26px 14px 30px;
+}
+
 .demo-screen {
   position: relative;
   padding: clamp(20px, 4%, 30px);
@@ -659,6 +673,8 @@ h2 {
   height: 19px;
   margin: -1px 0 0 -1px;
   overflow: visible;
+  /* Drawn over the screens, but clicks go through to them. */
+  pointer-events: none;
   filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.35));
 }
 
@@ -1143,8 +1159,17 @@ h2 {
 @media (max-width: 920px) {
   .hero,
   .use,
-  .demos {
+  .demos,
+  .demo--wide {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .demo--wide {
+    padding-bottom: 26px;
+  }
+
+  .demo--wide .demo-text {
+    padding: 22px 14px 0;
   }
 
   /* Put the keys right under the headline, where a thumb finds them first. */

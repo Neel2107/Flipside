@@ -110,7 +110,7 @@ class Diagram {
 // State --------------------------------------------------------------------------------------------
 
 /** Who asked for the flip, which decides where (and whether) a confirmation shows. */
-type Source = "shortcut" | "demo-hud" | "quiet";
+type Source = "shortcut" | "demo" | "quiet";
 type Target = "anchor" | "satellite";
 
 interface Flip {
@@ -158,7 +158,7 @@ class Hud {
     if (host) {
       const width = el.offsetWidth;
       const height = el.offsetHeight;
-      const scale = Math.min(1, (host.clientWidth * 0.8) / width, (host.clientHeight * 0.8) / height);
+      const scale = Math.min(1, (host.clientWidth * 0.94) / width, (host.clientHeight * 0.94) / height);
       // Lower middle, like the app, but always wholly on its screen.
       const half = (height * scale) / 2;
       const y = Math.min(Math.max(host.clientHeight * 0.78, half + 8), host.clientHeight - half - 8);
@@ -276,30 +276,18 @@ cards.forEach((card, index) => {
 });
 onFlip(() => cards.forEach((card, index) => card.setAttribute("aria-pressed", `${index === slot}`)));
 
-// Demo: a confirmation where you're looking ----------------------------------------------------------
+// Demo: everything stays on the screen you're using ---------------------------------------------------
 
 {
-  const demo = $("#demo-hud");
+  const demo = $("#demo-flip");
   const diagram = new Diagram($(".diagram", demo), DEMO_BOX, layouts, DEMO_INSET);
   const hud = new Hud($(".hud", demo));
-  $$("[data-target]", demo).forEach((button) =>
-    button.addEventListener("click", () => flip("demo-hud", button.dataset.target as Target)),
-  );
-  onFlip(({ from, to, source, target }) => {
-    diagram.render(arrangement(to), motionTo(to));
-    if (source === "demo-hud" && target) hud.show(from, to, target === "anchor" ? diagram.anchor : diagram.satellite);
-  });
-}
-
-// Demo: the pointer stays on its screen --------------------------------------------------------------
-
-{
-  const demo = $("#demo-pointer");
-  const diagram = new Diagram($(".diagram", demo), DEMO_BOX, layouts, DEMO_INSET);
   const pointer = $<SVGElement>(".pointer", demo) as unknown as HTMLElement;
   const status = $("[data-pointer-status]", demo);
   const modes = $$<HTMLButtonElement>("[data-mode]", demo);
+  const names: Record<Target, string> = { anchor: "monitor", satellite: "MacBook" };
   let keepsSpot = true;
+  let pointerOn: Target = "satellite";
 
   const spotOn = (r: Rect) => ({ x: r.x + r.w * POINTER_SPOT.x, y: r.y + r.h * POINTER_SPOT.y });
   const inside = (p: { x: number; y: number }, r: Rect) => p.x >= r.x && p.x <= r.x + r.w && p.y >= r.y && p.y <= r.y + r.h;
@@ -314,14 +302,23 @@ onFlip(() => cards.forEach((card, index) => card.setAttribute("aria-pressed", `$
   };
 
   diagram.render(arrangement(LAYOUTS[0]));
+  /** Puts the pointer back on its screen, as if you'd just moved it there. */
   const reset = () => {
     pointer.classList.remove("is-lost");
-    movePointer(spotOn(diagram.frames.satellite), null);
+    movePointer(spotOn(diagram.frames[pointerOn]), null);
     // Commit the starting spot before the next move, or the browser animates from the old one.
     void pointer.getBoundingClientRect();
-    status.textContent = "On the MacBook.";
+    status.textContent = `On the ${names[pointerOn]}.`;
   };
 
+  // Clicking a screen moves the pointer there and flips from it.
+  $$("[data-target]", demo).forEach((button) =>
+    button.addEventListener("click", () => {
+      pointerOn = button.dataset.target as Target;
+      flip("demo", pointerOn);
+    }),
+  );
+  $("[data-flip-demo]", demo).addEventListener("click", () => flip("demo", pointerOn));
   modes.forEach((button) =>
     button.addEventListener("click", () => {
       keepsSpot = button.dataset.mode === "flipside";
@@ -330,19 +327,21 @@ onFlip(() => cards.forEach((card, index) => card.setAttribute("aria-pressed", `$
     }),
   );
 
-  onFlip(({ to }) => {
-    // The pointer starts each flip on the MacBook, as if you'd just moved it there.
+  onFlip(({ from, to, source }) => {
     reset();
     const before = diagram.frames;
-    const start = spotOn(before.satellite);
+    const start = spotOn(before[pointerOn]);
     const after = diagram.render(arrangement(to), motionTo(to));
-    if (keepsSpot) {
-      movePointer(spotOn(after.satellite), motionTo(to));
-      status.textContent = "Same spot, same screen.";
+    // The confirmation shows on the screen the pointer was on, like the app's.
+    if (source === "demo") hud.show(from, to, pointerOn === "anchor" ? diagram.anchor : diagram.satellite);
+
+    // The monitor is the main display, so its coordinates never move: a pointer there stays put
+    // with or without Flipside. Only the MacBook moves out from under it.
+    if (keepsSpot || pointerOn === "anchor") {
+      movePointer(spotOn(after[pointerOn]), motionTo(to));
+      status.textContent = `Same spot on the ${names[pointerOn]}.`;
       return;
     }
-    // Without Flipside the pointer keeps its global position, which is measured from the main
-    // display's corner. That display stays put while the MacBook moves away from under it.
     const moved = { x: after.anchor.x + (start.x - before.anchor.x), y: after.anchor.y + (start.y - before.anchor.y) };
     movePointer(moved, motionTo(to));
     if (inside(moved, after.satellite)) status.textContent = "Still on the MacBook, by luck.";

@@ -147,37 +147,26 @@ const chord = [
         <h2 id="flip-title">What happens when you flip</h2>
 
         <div class="demos">
-          <article class="demo" id="demo-hud">
+          <article class="demo demo--wide" id="demo-flip">
             <div class="demo-screen">
               <Diagram class="diagram--legend diagram--pickable" arrangement={layouts[0]} box={DEMO_BOX} scaleWith={layouts} inset={DEMO_INSET}>
                 <button slot="anchor" class="tile-hit" type="button" data-target="anchor" aria-label="Flip from the monitor"></button>
                 <button slot="satellite" class="tile-hit" type="button" data-target="satellite" aria-label="Flip from the MacBook"></button>
-              </Diagram>
-              <Hud id="demo-hud-hud" />
-            </div>
-            <div class="demo-text">
-              <h3>A confirmation where you're looking</h3>
-              <p>It appears on the screen your pointer is on. Click either screen to try it.</p>
-            </div>
-          </article>
-
-          <article class="demo" id="demo-pointer">
-            <div class="demo-screen">
-              <Diagram class="diagram--legend" arrangement={layouts[0]} box={DEMO_BOX} scaleWith={layouts} inset={DEMO_INSET}>
                 <svg class="pointer" style={pointerStyle} viewBox="0 0 14 20" aria-hidden="true">
                   <path d="M1 1v15.5l4-3.8 2.6 6 2.6-1.1-2.6-5.9H13z"></path>
                 </svg>
               </Diagram>
+              <Hud id="demo-flip-hud" />
             </div>
             <div class="demo-text">
-              <h3>Your pointer stays on its screen</h3>
-              <p>Flipside puts it back on the same spot of the same screen.</p>
+              <h3>Everything stays on the screen you're using</h3>
+              <p>Click a screen to flip from it. The confirmation appears there, and the pointer keeps its spot.</p>
               <div class="controls">
                 <div class="segmented" role="radiogroup" aria-label="Pointer handling">
                   <button type="button" role="radio" aria-checked="true" data-mode="flipside">With Flipside</button>
                   <button type="button" role="radio" aria-checked="false" data-mode="macos">Without</button>
                 </div>
-                <button class="key key--small" type="button" data-flip-quiet>Flip</button>
+                <button class="key key--small" type="button" data-flip-demo>Flip</button>
               </div>
               <p class="demo-note" data-pointer-status aria-live="polite">On the MacBook.</p>
             </div>
