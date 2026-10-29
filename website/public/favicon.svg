@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="96 96 832 832">
+  <!-- The keycap logo (src/components/Logo.astro) without its drop shadow, cropped to the key.
+       Aluminium in light mode, space grey in dark. -->
+  <style>
+    .side-a { stop-color: #cbc7be; }
+    .side-b { stop-color: #aca79d; }
+    .face-a { stop-color: #ffffff; }
+    .face-b { stop-color: #e9e7e1; }
+    .rim { stroke: #fff; stroke-opacity: 0.7; }
+    .monitor { fill: #232323; }
+    @media (prefers-color-scheme: dark) {
+      .side-a { stop-color: #2a2a2d; }
+      .side-b { stop-color: #161618; }
+      .face-a { stop-color: #55555a; }
+      .face-b { stop-color: #3c3c40; }
+      .rim { stroke-opacity: 0.14; }
+      .monitor { fill: #edece8; }
+    }
+  </style>
+  <defs>
+    <linearGradient id="side" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" class="side-a" />
+      <stop offset="1" class="side-b" />
+    </linearGradient>
+    <linearGradient id="face" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" class="face-a" />
+      <stop offset="1" class="face-b" />
+    </linearGradient>
+    <linearGradient id="macbook" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0" stop-color="#ff8a55" />
+      <stop offset="1" stop-color="#ff5b1f" />
+    </linearGradient>
+  </defs>
+  <rect x="100" y="100" width="824" height="824" rx="185" fill="url(#side)" />
+  <rect x="128" y="112" width="768" height="744" rx="160" fill="url(#face)" />
+  <rect x="129.5" y="113.5" width="765" height="741" rx="158.5" fill="none" class="rim" stroke-width="3" />
+  <g transform="translate(512 482) scale(0.84) translate(-512 -482)">
+    <rect x="183" y="420" width="236" height="153" rx="28" fill="url(#macbook)" />
+    <rect x="441" y="370" width="400" height="224" rx="34" class="monitor" />
+  </g>
+</svg>

@@ -1,0 +1,357 @@
+---
+import Diagram from "../components/Diagram.astro";
+import Glyph from "../components/Glyph.astro";
+import Hud from "../components/Hud.astro";
+import Logo from "../components/Logo.astro";
+import plist from "../../../Resources/Info.plist?raw";
+import { LAYOUTS, MACBOOK, arrangement, detail, layout, room, title } from "../scripts/geometry";
+import {
+  CARD_BOX,
+  DEFAULT_RESOLUTION,
+  DEMO_BOX,
+  DEMO_INSET,
+  HERO_BOX,
+  HERO_INSET,
+  POINTER_SPOT,
+  RESOLUTIONS,
+  layouts,
+  resolutionLayouts,
+} from "../scripts/config";
+import "../styles/global.css";
+
+const github = "https://github.com/Neel2107/Flipside";
+const changelog = `${github}/blob/main/CHANGELOG.md`;
+const mend = "https://mend.itsneel.com";
+const installCommand = "curl -fsSL https://flipside.itsneel.com/install | sh";
+// Read from the app's own Info.plist so the page never lags a release.
+const version = plist.match(/CFBundleShortVersionString<\/key>\s*<string>([^<]+)</)?.[1] ?? "";
+
+const start = LAYOUTS[0];
+const pointerFrames = layout(layouts[0], DEMO_BOX, layouts, DEMO_INSET).satellite;
+const pointerStyle = `left:${((pointerFrames.x + pointerFrames.w * POINTER_SPOT.x) / DEMO_BOX.w) * 100}%;top:${((pointerFrames.y + pointerFrames.h * POINTER_SPOT.y) / DEMO_BOX.h) * 100}%`;
+const percentAlong = Math.round(start.align * 100);
+const pointsAlong = (anchor = RESOLUTIONS[DEFAULT_RESOLUTION].size) =>
+  Math.round(room(start.edge, anchor, MACBOOK) * start.align);
+const chord = [
+  { cap: "⌃", name: "Control" },
+  { cap: "⌥", name: "Option" },
+  { cap: "⌘", name: "Command" },
+  { cap: "D", name: "D" },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#e4e2dd" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#2b2b2d" media="(prefers-color-scheme: dark)" />
+    <meta
+      name="description"
+      content="Flipside is a free menu bar app that switches your Mac between two display arrangements, MacBook beside the monitor or under it, with one shortcut."
+    />
+    <meta property="og:title" content="Flipside — your MacBook moved, your displays didn't" />
+    <meta property="og:description" content="Switch your Mac between two display arrangements with one shortcut." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://flipside.itsneel.com" />
+    <meta property="og:image" content={new URL("/icon.png", Astro.site)} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/icon.png" />
+    <link rel="apple-touch-icon" href="/icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Martian+Mono:wght@400..600&display=swap"
+    />
+    <title>Flipside — your MacBook moved, your displays didn't</title>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="topbar">
+      <a class="wordmark" href="#top" aria-label="Flipside, back to top">
+        <Logo size={30} id="logo-light" class="logo logo--light" />
+        <Logo size={30} id="logo-dark" dark class="logo logo--dark" />
+        <span>Flipside</span>
+      </a>
+      <nav aria-label="Sections">
+        <a href="#flip">What happens</a>
+        <a href="#use">Using it</a>
+        <a href="#install">Install</a>
+        <a href={github}>GitHub</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top">
+        <div class="hero-copy">
+          <h1>Your MacBook moved. <span>Your displays didn't.</span></h1>
+          <p class="hero-lede">
+            Flipside keeps two display arrangements, MacBook beside the monitor or under it, and switches between them
+            with one shortcut. It lives in your menu bar.
+          </p>
+          <div class="command">
+            <code>{installCommand}</code>
+            <button class="copy" type="button" data-copy={installCommand}>Copy</button>
+          </div>
+          <p class="hero-meta">Free · Apple silicon · macOS 14 or later</p>
+        </div>
+
+        <div class="rig">
+          <div class="device">
+            <div class="screen">
+              <Diagram
+                class="diagram--legend"
+                id="hero"
+                arrangement={layouts[0]}
+                box={HERO_BOX}
+                scaleWith={layouts}
+                inset={HERO_INSET}
+              />
+              <div class="readout" aria-hidden="true">
+                <span data-readout-title>{title(start)}</span>
+                <span data-readout-detail>{detail(start)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="chord" role="group" aria-label="Flip shortcut">
+            {
+              chord.map(({ cap, name }) => (
+                <button class:list={["key", { "key--accent": cap === "D" }]} type="button" data-chord aria-label={`${name}, flips the displays`}>
+                  {cap}
+                </button>
+              ))
+            }
+          </div>
+          <p class="rig-hint"><span class="hint-pointer">Click the keys, or press ⌃⌥⌘D</span><span class="hint-touch">Tap the keys</span></p>
+        </div>
+      </section>
+
+      <section class="lead" aria-label="Why Flipside exists">
+        <p>
+          macOS remembers one arrangement for a pair of displays. Slide your MacBook from beside the monitor to under it,
+          and your pointer still leaves through the wrong edge until you open System Settings and drag a rectangle.
+          <strong>Flipside keeps both arrangements, one shortcut apart.</strong>
+        </p>
+      </section>
+
+      <section class="flip" id="flip" aria-labelledby="flip-title">
+        <h2 id="flip-title">What happens when you flip</h2>
+
+        <div class="demos">
+          <article class="demo" id="demo-hud">
+            <div class="demo-screen">
+              <Diagram class="diagram--legend diagram--pickable" arrangement={layouts[0]} box={DEMO_BOX} scaleWith={layouts} inset={DEMO_INSET}>
+                <button slot="anchor" class="tile-hit" type="button" data-target="anchor" aria-label="Flip from the monitor"></button>
+                <button slot="satellite" class="tile-hit" type="button" data-target="satellite" aria-label="Flip from the MacBook"></button>
+              </Diagram>
+              <Hud id="demo-hud-hud" />
+            </div>
+            <div class="demo-text">
+              <h3>A confirmation where you're looking</h3>
+              <p>
+                Rearranging displays moves nothing you can see, so each flip shows a brief confirmation on the screen your
+                pointer is on, not always the main one.
+              </p>
+              <p class="demo-note">Click either screen to flip from it.</p>
+            </div>
+          </article>
+
+          <article class="demo" id="demo-pointer">
+            <div class="demo-screen">
+              <Diagram class="diagram--legend" arrangement={layouts[0]} box={DEMO_BOX} scaleWith={layouts} inset={DEMO_INSET}>
+                <svg class="pointer" style={pointerStyle} viewBox="0 0 14 20" aria-hidden="true">
+                  <path d="M1 1v15.5l4-3.8 2.6 6 2.6-1.1-2.6-5.9H13z"></path>
+                </svg>
+              </Diagram>
+            </div>
+            <div class="demo-text">
+              <h3>Your pointer stays on its screen</h3>
+              <p>
+                macOS keeps the pointer's coordinates when screens move, which can leave it on the wrong display or on
+                none. Flipside puts it back on the same spot.
+              </p>
+              <div class="controls">
+                <div class="segmented" role="radiogroup" aria-label="Pointer handling">
+                  <button type="button" role="radio" aria-checked="true" data-mode="flipside">With Flipside</button>
+                  <button type="button" role="radio" aria-checked="false" data-mode="macos">Without</button>
+                </div>
+                <button class="key key--small" type="button" data-flip-quiet>Flip</button>
+              </div>
+              <p class="demo-note" data-pointer-status aria-live="polite">On the MacBook.</p>
+            </div>
+          </article>
+
+          <article class="demo" id="demo-scale">
+            <div class="demo-screen">
+              <Diagram
+                class="diagram--legend"
+                arrangement={arrangement(start, RESOLUTIONS[DEFAULT_RESOLUTION].size)}
+                box={DEMO_BOX}
+                scaleWith={resolutionLayouts}
+                inset={DEMO_INSET}
+              >
+                <span class="ghost" aria-hidden="true"></span>
+              </Diagram>
+            </div>
+            <div class="demo-text">
+              <h3>The same shape at any resolution</h3>
+              <p>
+                Positions are saved as a share of the shared edge, not in points, so a layout keeps its shape when you
+                change the monitor's resolution.
+              </p>
+              <div class="controls">
+                <div class="segmented" role="radiogroup" aria-label="Monitor resolution">
+                  {
+                    RESOLUTIONS.map((r, index) => (
+                      <button type="button" role="radio" aria-checked={index === DEFAULT_RESOLUTION ? "true" : "false"} data-resolution={index}>
+                        {r.label}
+                      </button>
+                    ))
+                  }
+                </div>
+              </div>
+              <ul class="legend">
+                <li>
+                  <span class="swatch" aria-hidden="true"></span>
+                  <span>Flipside: <b data-share>{percentAlong}%</b> along the edge, <b data-share-points>{pointsAlong()} pt</b> here</span>
+                </li>
+                <li>
+                  <span class="swatch swatch--ghost" aria-hidden="true"></span>
+                  <span>Saved in points: always <b data-fixed-points>{pointsAlong()} pt</b></span>
+                </li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="demo" id="demo-icon">
+            <div class="demo-screen demo-screen--icon">
+              <div class="icon-stage">
+                <div class="icon-bar">
+                  <Glyph placement={start} id="demo-glyph" class="glyph--large" />
+                </div>
+                <div class="actual-size">
+                  <span class="actual-bar"><Glyph placement={start} id="demo-glyph-actual" /></span>
+                  <span>Actual size</span>
+                </div>
+              </div>
+            </div>
+            <div class="demo-text">
+              <h3>An icon that shows the arrangement</h3>
+              <p>
+                The menu bar icon draws the layout you're in and reshapes itself when it changes. It dims while only one
+                display is connected.
+              </p>
+              <div class="controls">
+                <label class="toggle">
+                  <input type="checkbox" data-one-display />
+                  <span class="toggle-track" aria-hidden="true"></span>
+                  <span>One display</span>
+                </label>
+                <button class="key key--small" type="button" data-flip-quiet>Flip</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="use" id="use" aria-labelledby="use-title">
+        <div class="use-text">
+          <h2 id="use-title">Using it</h2>
+          <dl class="uses">
+            <div>
+              <dt>Pick an arrangement</dt>
+              <dd>Click the menu bar icon, then a card. Or press <kbd>1</kbd> or <kbd>2</kbd> while the panel is open.</dd>
+            </div>
+            <div>
+              <dt>Flip to the other one</dt>
+              <dd>Press <kbd>⌃</kbd><kbd>⌥</kbd><kbd>⌘</kbd><kbd>D</kbd> anywhere, or right-click the icon.</dd>
+            </div>
+            <div>
+              <dt>Keep your own layout</dt>
+              <dd>Arrange your displays once in System Settings, then choose Save as in the panel.</dd>
+            </div>
+            <div>
+              <dt>Change the shortcut</dt>
+              <dd>Click the keycaps in the panel and press a new combination.</dd>
+            </div>
+          </dl>
+          <p class="use-note">
+            The display with the menu bar stays the main one in both layouts, so your menu bar and Dock never jump screens.
+          </p>
+        </div>
+
+        <figure class="panel-shot">
+          <div class="panel" role="group" aria-label="The Flipside panel">
+            <div class="panel-head">
+              <span class="panel-title">Arrangement</span>
+              <span class="panel-display">External Display</span>
+            </div>
+            <div class="panel-cards">
+              {
+                LAYOUTS.map((placement, index) => (
+                  <button class="card" type="button" data-slot={index} aria-pressed={index === 0 ? "true" : "false"}>
+                    <Diagram class="diagram--card" arrangement={layouts[index]} box={CARD_BOX} scaleWith={layouts} aria-hidden="true" />
+                    <span class="card-title">{title(placement)}</span>
+                    <span class="card-detail">{detail(placement)}</span>
+                    <svg class="card-check" viewBox="0 0 16 16" aria-hidden="true">
+                      <circle cx="8" cy="8" r="8"></circle>
+                      <path d="M4.6 8.3l2.2 2.2 4.6-4.9"></path>
+                    </svg>
+                  </button>
+                ))
+              }
+            </div>
+            <hr />
+            <div class="panel-row">
+              <span>
+                Flip shortcut
+                <small>or right-click the menu bar icon</small>
+              </span>
+              <span class="panel-keys" aria-label="Control Option Command D"><kbd>⌃</kbd><kbd>⌥</kbd><kbd>⌘</kbd><kbd>D</kbd></span>
+            </div>
+            <div class="panel-row">
+              <span>Launch at login</span>
+              <span class="panel-switch" aria-hidden="true"></span>
+            </div>
+          </div>
+          <figcaption>The panel, live. Pick a card.</figcaption>
+        </figure>
+      </section>
+
+      <section class="install" id="install" aria-labelledby="install-title">
+        <h2 id="install-title">Install</h2>
+        <p class="install-lede">Paste this into Terminal. Run it again any time to update.</p>
+        <div class="command command--large">
+          <code>{installCommand}</code>
+          <button class="copy" type="button" data-copy={installCommand}>Copy</button>
+        </div>
+        <ul class="facts">
+          <li><b>No permissions</b> No Accessibility or Screen Recording access to grant.</li>
+          <li><b>Checked</b> The installer verifies the release checksum first.</li>
+          <li><b>Two displays</b> Any Apple silicon Mac on macOS 14 or later.</li>
+        </ul>
+        <p class="install-links">
+          <a href={`${github}/releases/latest`}>Download from GitHub</a>
+          <a href={changelog}>Version {version}</a>
+          <a href={github}>Source, MIT licensed</a>
+        </p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Made by <a href="https://github.com/Neel2107">Neel</a>.</p>
+      <p>Also by Neel: <a href={mend}>Mend</a>, which fixes your writing in any app.</p>
+    </footer>
+
+    <Hud id="hero-hud" />
+    <div class="sr-only" id="announcer" aria-live="polite"></div>
+
+    <script>
+      import "../scripts/site";
+    </script>
+  </body>
+</html>

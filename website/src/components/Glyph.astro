@@ -1,0 +1,25 @@
+---
+// The menu bar icon, drawn from the same geometry as StatusGlyph.swift.
+import { GLYPH, glyphFrames, glyphParts, type Placement } from "../scripts/geometry";
+
+interface Props {
+  placement: Placement;
+  id: string;
+  class?: string;
+}
+
+const { placement, id, class: className } = Astro.props;
+const parts = glyphParts(glyphFrames(placement));
+const mask = `${id}-gap`;
+---
+
+<svg class:list={["glyph", className]} viewBox={`0 0 ${GLYPH.w} ${GLYPH.h}`} data-glyph aria-hidden="true" focusable="false">
+  <defs>
+    <mask id={mask} maskUnits="userSpaceOnUse" x="0" y="0" width={GLYPH.w} height={GLYPH.h}>
+      <rect width={GLYPH.w} height={GLYPH.h} fill="white"></rect>
+      <rect data-part="cut" fill="black" rx="3" {...parts.cut}></rect>
+    </mask>
+  </defs>
+  <rect data-part="laptop" fill="none" stroke="currentColor" stroke-width="1.2" rx="1.25" mask={`url(#${mask})`} {...parts.laptop}></rect>
+  <rect data-part="monitor" fill="currentColor" rx="1.75" {...parts.monitor}></rect>
+</svg>

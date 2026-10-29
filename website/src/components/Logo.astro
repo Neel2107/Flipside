@@ -1,0 +1,46 @@
+---
+// The Flipside keycap on the macOS 1024 icon grid: an aluminium key (space grey with `dark`)
+// whose legend is the arrangement, the monitor and the MacBook in orange.
+// public/favicon.svg is the same drawing without the shadow; keep them in step.
+interface Props {
+  size: number;
+  id: string;
+  dark?: boolean;
+  class?: string;
+}
+
+const { size, id, dark = false, class: className } = Astro.props;
+const g = (name: string) => `${id}-${name}`;
+const colors = dark
+  ? { side: ["#2a2a2d", "#161618"], face: ["#55555a", "#3c3c40"], rim: 0.14, monitor: "#edece8" }
+  : { side: ["#cbc7be", "#aca79d"], face: ["#ffffff", "#e9e7e1"], rim: 0.7, monitor: "#232323" };
+---
+
+<svg class={className} width={size} height={size} viewBox="0 0 1024 1024" aria-hidden="true">
+  <defs>
+    <filter id={g("shadow")} x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000" flood-opacity="0.28"></feDropShadow>
+    </filter>
+    <linearGradient id={g("side")} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color={colors.side[0]}></stop>
+      <stop offset="1" stop-color={colors.side[1]}></stop>
+    </linearGradient>
+    <linearGradient id={g("face")} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color={colors.face[0]}></stop>
+      <stop offset="1" stop-color={colors.face[1]}></stop>
+    </linearGradient>
+    <linearGradient id={g("macbook")} x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0" stop-color="#ff8a55"></stop>
+      <stop offset="1" stop-color="#ff5b1f"></stop>
+    </linearGradient>
+  </defs>
+  <!-- A darker base for the key's sides, a lighter, smaller face on top. -->
+  <rect x="100" y="100" width="824" height="824" rx="185" fill={`url(#${g("side")})`} filter={`url(#${g("shadow")})`}></rect>
+  <rect x="128" y="112" width="768" height="744" rx="160" fill={`url(#${g("face")})`}></rect>
+  <rect x="129.5" y="113.5" width="765" height="741" rx="158.5" fill="none" stroke="#fff" stroke-opacity={colors.rim} stroke-width="3"></rect>
+  <!-- The legend keeps clear of the face's rounded corners, like a printed key. -->
+  <g transform="translate(512 482) scale(0.84) translate(-512 -482)">
+    <rect x="183" y="420" width="236" height="153" rx="28" fill={`url(#${g("macbook")})`}></rect>
+    <rect x="441" y="370" width="400" height="224" rx="34" fill={colors.monitor}></rect>
+  </g>
+</svg>

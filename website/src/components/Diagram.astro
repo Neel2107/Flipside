@@ -1,0 +1,32 @@
+---
+// Two display tiles drawn to scale, positioned in percentages of `box` so the picture is right
+// before any script runs. The browser takes over from here to animate changes.
+import { layout, percent, type Arrangement, type Rect, type Size } from "../scripts/geometry";
+
+interface Props {
+  arrangement: Arrangement;
+  box: Size;
+  scaleWith?: Arrangement[];
+  inset?: number;
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { arrangement, box, scaleWith = [], inset = 1, class: className, ...rest } = Astro.props;
+const frames = layout(arrangement, box, scaleWith, inset);
+const style = (r: Rect) =>
+  Object.entries(percent(r, box))
+    .map(([key, value]) => `${key}:${value}`)
+    .join(";");
+---
+
+<div class:list={["diagram", className]} style={`aspect-ratio:${box.w}/${box.h}`} {...rest}>
+  <div class="tile tile--anchor" data-tile="anchor" style={style(frames.anchor)}>
+    <span class="menu-strip" aria-hidden="true"></span>
+    <slot name="anchor" />
+  </div>
+  <div class="tile tile--satellite" data-tile="satellite" style={style(frames.satellite)}>
+    <slot name="satellite" />
+  </div>
+  <slot />
+</div>

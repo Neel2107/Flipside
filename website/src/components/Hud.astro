@@ -1,0 +1,17 @@
+---
+// The confirmation the app shows on each flip (HUD.swift), at the app's own size.
+import Diagram from "./Diagram.astro";
+import { LAYOUTS, arrangement, title } from "../scripts/geometry";
+
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.props;
+const layouts = LAYOUTS.map((p) => arrangement(p));
+---
+
+<div class="hud" id={id} aria-hidden="true">
+  <Diagram class="diagram--hud" arrangement={layouts[0]} box={{ w: 148, h: 84 }} scaleWith={layouts} />
+  <span class="hud-title" data-hud-title>{title(LAYOUTS[0])}</span>
+</div>
