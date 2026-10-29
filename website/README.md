@@ -25,12 +25,13 @@ bun --bun run build
 
 ## Share card
 
-`og.png` is the 1200 × 630 image every link preview uses. It's a screenshot of the `/og` page;
+`src/assets/og.png` is the 1200 × 630 image every link preview uses; its published URL carries a
+content hash, so a new card is never hidden behind a cached preview. It's a screenshot of the `/og` page;
 after changing that page, re-render it with the dev server running:
 
 ```sh
 "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --hide-scrollbars \
-  --window-size=1200,630 --virtual-time-budget=6000 --screenshot=public/og.png http://localhost:4322/og
+  --window-size=1200,630 --virtual-time-budget=6000 --screenshot=src/assets/og.png http://localhost:4322/og
 ```
 
 ## Deployment
