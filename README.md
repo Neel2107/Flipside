@@ -1,6 +1,10 @@
+<img src="docs/icon.png" alt="" width="128" height="128" align="right" />
+
 # Flipside
 
 A menu bar app that flips a Mac between two display arrangements: laptop beside the monitor, or laptop underneath it.
+
+**[flipside.itsneel.com](https://flipside.itsneel.com)** — try the flip in your browser, then install.
 
 ![The Flipside panel](docs/panel.png)
 
@@ -33,8 +37,10 @@ Positions are stored as a proportion along the shared edge, not in points, so "c
 ## Install
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/Neel2107/Flipside/main/scripts/install.sh | sh
+curl -fsSL https://flipside.itsneel.com/install | sh
 ```
+
+That serves this repository's `scripts/install.sh`; `curl -fsSL https://raw.githubusercontent.com/Neel2107/Flipside/main/scripts/install.sh | sh` runs the same script straight from GitHub.
 
 Requires an Apple silicon Mac on macOS 14 or later. The installer verifies the release checksum and puts Flipside in `/Applications`. Run the same command again to update.
 
@@ -73,3 +79,4 @@ Layout:
 - `Sources/FlipsideCore` — arrangement geometry and the CoreGraphics calls (`CGConfigureDisplayOrigin`). No UI.
 - `Sources/Flipside` — the menu bar app: status item, SwiftUI panel, HUD, global shortcut.
 - `Tools/` — the virtual display harness. Not part of the app.
+- `website/` — the site at flipside.itsneel.com, which every push to `main` deploys. See [website/README.md](website/README.md).

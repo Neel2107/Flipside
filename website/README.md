@@ -25,5 +25,7 @@ bun --bun run build
 
 ## Deployment
 
-Set the Vercel project root to the repository; `vercel.json` builds this folder. The production
-domain is `flipside.itsneel.com`.
+The Vercel project `flipside` is connected to the GitHub repository, so every push to `main`
+deploys to flipside.itsneel.com. It builds from the repository root with `vercel.json`, and
+`.vercelignore` limits the upload to this folder plus the two files it reads. To deploy by hand
+from a checkout, run `bunx vercel@latest deploy --prod` in the repository root.
