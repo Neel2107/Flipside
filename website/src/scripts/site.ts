@@ -338,7 +338,7 @@ onFlip(() => cards.forEach((card, index) => card.setAttribute("aria-pressed", `$
     const after = diagram.render(arrangement(to), motionTo(to));
     if (keepsSpot) {
       movePointer(spotOn(after.satellite), motionTo(to));
-      status.textContent = "Still on the MacBook, on the same spot.";
+      status.textContent = "Same spot, same screen.";
       return;
     }
     // Without Flipside the pointer keeps its global position, which is measured from the main
@@ -346,10 +346,10 @@ onFlip(() => cards.forEach((card, index) => card.setAttribute("aria-pressed", `$
     const moved = { x: after.anchor.x + (start.x - before.anchor.x), y: after.anchor.y + (start.y - before.anchor.y) };
     movePointer(moved, motionTo(to));
     if (inside(moved, after.satellite)) status.textContent = "Still on the MacBook, by luck.";
-    else if (inside(moved, after.anchor)) status.textContent = "Now on the monitor, though you didn't move it.";
+    else if (inside(moved, after.anchor)) status.textContent = "Jumped to the monitor.";
     else {
       pointer.classList.add("is-lost");
-      status.textContent = "Off every screen. It jumps somewhere when you next touch the mouse.";
+      status.textContent = "Lost off-screen.";
     }
   });
 }
@@ -362,7 +362,6 @@ onFlip(() => cards.forEach((card, index) => card.setAttribute("aria-pressed", `$
   const ghost = $(".ghost", demo);
   const options = $$<HTMLButtonElement>("[data-resolution]", demo);
   const share = $("[data-share]", demo);
-  const sharePoints = $("[data-share-points]", demo);
   const fixedPoints = $("[data-fixed-points]", demo);
   let resolution = DEFAULT_RESOLUTION;
 
@@ -383,7 +382,6 @@ onFlip(() => cards.forEach((card, index) => card.setAttribute("aria-pressed", `$
     ghost.classList.toggle("is-apart", drifted);
 
     share.textContent = `${Math.round(placement.align * 100)}%`;
-    sharePoints.textContent = `${Math.round(room(placement.edge, monitor, MACBOOK) * placement.align)} pt`;
     fixedPoints.textContent = `${fixed} pt`;
   };
 

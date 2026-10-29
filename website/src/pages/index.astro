@@ -101,15 +101,11 @@ const chord = [
       <section class="hero" id="top">
         <div class="hero-copy">
           <h1>Your MacBook moved. <span>Your displays didn't.</span></h1>
-          <p class="hero-lede">
-            Flipside keeps two display arrangements, MacBook beside the monitor or under it, and switches between them
-            with one shortcut. It lives in your menu bar.
-          </p>
+          <p class="hero-lede">Flipside switches your Mac between two display arrangements with one shortcut.</p>
           <div class="command">
             <code>{installCommand}</code>
             <button class="copy" type="button" data-copy={installCommand}>Copy</button>
           </div>
-          <p class="hero-meta">Free · Apple silicon · macOS 14 or later</p>
         </div>
 
         <div class="rig">
@@ -144,11 +140,7 @@ const chord = [
       </section>
 
       <section class="lead" aria-label="Why Flipside exists">
-        <p>
-          macOS remembers one arrangement for a pair of displays. Slide your MacBook from beside the monitor to under it,
-          and your pointer still leaves through the wrong edge until you open System Settings and drag a rectangle.
-          <strong>Flipside keeps both arrangements, one shortcut apart.</strong>
-        </p>
+        <p>macOS remembers one arrangement. <strong>Flipside remembers two.</strong></p>
       </section>
 
       <section class="flip" id="flip" aria-labelledby="flip-title">
@@ -165,11 +157,7 @@ const chord = [
             </div>
             <div class="demo-text">
               <h3>A confirmation where you're looking</h3>
-              <p>
-                Rearranging displays moves nothing you can see, so each flip shows a brief confirmation on the screen your
-                pointer is on, not always the main one.
-              </p>
-              <p class="demo-note">Click either screen to flip from it.</p>
+              <p>It appears on the screen your pointer is on. Click either screen to try it.</p>
             </div>
           </article>
 
@@ -183,10 +171,7 @@ const chord = [
             </div>
             <div class="demo-text">
               <h3>Your pointer stays on its screen</h3>
-              <p>
-                macOS keeps the pointer's coordinates when screens move, which can leave it on the wrong display or on
-                none. Flipside puts it back on the same spot.
-              </p>
+              <p>Flipside puts it back on the same spot of the same screen.</p>
               <div class="controls">
                 <div class="segmented" role="radiogroup" aria-label="Pointer handling">
                   <button type="button" role="radio" aria-checked="true" data-mode="flipside">With Flipside</button>
@@ -212,10 +197,7 @@ const chord = [
             </div>
             <div class="demo-text">
               <h3>The same shape at any resolution</h3>
-              <p>
-                Positions are saved as a share of the shared edge, not in points, so a layout keeps its shape when you
-                change the monitor's resolution.
-              </p>
+              <p>Layouts are saved as a share of the edge, so resolution changes can't bend them.</p>
               <div class="controls">
                 <div class="segmented" role="radiogroup" aria-label="Monitor resolution">
                   {
@@ -230,11 +212,11 @@ const chord = [
               <ul class="legend">
                 <li>
                   <span class="swatch" aria-hidden="true"></span>
-                  <span>Flipside: <b data-share>{percentAlong}%</b> along the edge, <b data-share-points>{pointsAlong()} pt</b> here</span>
+                  <span>Flipside: <b data-share>{percentAlong}%</b> along</span>
                 </li>
                 <li>
                   <span class="swatch swatch--ghost" aria-hidden="true"></span>
-                  <span>Saved in points: always <b data-fixed-points>{pointsAlong()} pt</b></span>
+                  <span>In points: <b data-fixed-points>{pointsAlong()} pt</b></span>
                 </li>
               </ul>
             </div>
@@ -254,10 +236,7 @@ const chord = [
             </div>
             <div class="demo-text">
               <h3>An icon that shows the arrangement</h3>
-              <p>
-                The menu bar icon draws the layout you're in and reshapes itself when it changes. It dims while only one
-                display is connected.
-              </p>
+              <p>The menu bar icon draws your current layout, and dims with one display.</p>
               <div class="controls">
                 <label class="toggle">
                   <input type="checkbox" data-one-display />
@@ -274,27 +253,11 @@ const chord = [
       <section class="use" id="use" aria-labelledby="use-title">
         <div class="use-text">
           <h2 id="use-title">Using it</h2>
-          <dl class="uses">
-            <div>
-              <dt>Pick an arrangement</dt>
-              <dd>Click the menu bar icon, then a card. Or press <kbd>1</kbd> or <kbd>2</kbd> while the panel is open.</dd>
-            </div>
-            <div>
-              <dt>Flip to the other one</dt>
-              <dd>Press <kbd>⌃</kbd><kbd>⌥</kbd><kbd>⌘</kbd><kbd>D</kbd> anywhere, or right-click the icon.</dd>
-            </div>
-            <div>
-              <dt>Keep your own layout</dt>
-              <dd>Arrange your displays once in System Settings, then choose Save as in the panel.</dd>
-            </div>
-            <div>
-              <dt>Change the shortcut</dt>
-              <dd>Click the keycaps in the panel and press a new combination.</dd>
-            </div>
-          </dl>
-          <p class="use-note">
-            The display with the menu bar stays the main one in both layouts, so your menu bar and Dock never jump screens.
-          </p>
+          <ul class="uses">
+            <li>Click the menu bar icon to pick a layout.</li>
+            <li>Right-click it, or press <kbd>⌃</kbd><kbd>⌥</kbd><kbd>⌘</kbd><kbd>D</kbd>, to flip.</li>
+            <li>Arrange displays in System Settings, then choose Save as to keep your own.</li>
+          </ul>
         </div>
 
         <figure class="panel-shot">
@@ -331,22 +294,17 @@ const chord = [
               <span class="panel-switch" aria-hidden="true"></span>
             </div>
           </div>
-          <figcaption>The panel, live. Pick a card.</figcaption>
+          <figcaption>Live. Pick a card.</figcaption>
         </figure>
       </section>
 
       <section class="install" id="install" aria-labelledby="install-title">
         <h2 id="install-title">Install</h2>
-        <p class="install-lede">Paste this into Terminal. Run it again any time to update.</p>
         <div class="command command--large">
           <code>{installCommand}</code>
           <button class="copy" type="button" data-copy={installCommand}>Copy</button>
         </div>
-        <ul class="facts">
-          <li><b>No permissions</b> No Accessibility or Screen Recording access to grant.</li>
-          <li><b>Checked</b> The installer verifies the release checksum first.</li>
-          <li><b>Two displays</b> Any Apple silicon Mac on macOS 14 or later.</li>
-        </ul>
+        <p class="facts">No permissions · Checksum verified · Apple silicon, macOS 14+ · Free</p>
         <p class="install-links">
           <a href={`${github}/releases/latest`}>Download from GitHub</a>
           <a href={changelog}>Version {version}</a>
@@ -356,8 +314,7 @@ const chord = [
     </main>
 
     <footer class="footer">
-      <p>Made by <a href="https://github.com/Neel2107">Neel</a>.</p>
-      <p>Also by Neel: <a href={mend}>Mend</a>, which fixes your writing in any app.</p>
+      <p>Made by <a href="https://github.com/Neel2107">Neel</a> · Also <a href={mend}>Mend</a></p>
     </footer>
 
     <Hud id="hero-hud" />
