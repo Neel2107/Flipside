@@ -1,0 +1,10 @@
+# Upload only what the website build reads: the site itself, plus the install script it serves
+# and the Info.plist it takes the version from.
+/*
+!/website
+!/scripts
+!/Resources
+!/vercel.json
+/website/node_modules
+/website/dist
+/website/.astro
